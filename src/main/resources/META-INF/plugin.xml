@@ -1,0 +1,33 @@
+<idea-plugin>
+    <id>org.jetbrains</id>
+    <name>Notes-Plugin</name>
+    <vendor email="null" url="github">Notes Plugin Project</vendor>
+
+    <description><![CDATA[
+    A plugin for recording and managing notes about files
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="162"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceInterface="notes.NoteService" serviceImplementation="notes.impl.NoteServiceImpl"/>
+        <applicationService serviceInterface="notes.NoteAnnotationService"
+                            serviceImplementation="notes.impl.NoteAnnotationServiceImpl"/>
+        <applicationService serviceInterface="notes.NotePopupService"
+                            serviceImplementation="notes.impl.NotePopupServiceImpl"/>
+    </extensions>
+
+    <actions>
+        <action id="MyPlugin.notes.ShowNoteAnnotations" class="notes.ShowNoteAnnotations" text="Show notes.Note Annotations"
+                description="show note annotations">
+            <add-to-group group-id="EditorGutterPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
