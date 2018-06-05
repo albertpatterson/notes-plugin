@@ -11,6 +11,7 @@ import com.intellij.openapi.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.vfs.VirtualFile;
+import notes.Note;
 import notes.NoteAnnotationService;
 import notes.NotePopupService;
 import notes.NoteService;
@@ -34,14 +35,14 @@ public class NoteAnnotationServiceImpl implements NoteAnnotationService {
             @Nullable
             @Override
             public String getLineText(int line, Editor editor) {
-                String note = noteService.getNote(path, line);
+                Note note = noteService.getNote(path, line);
                 return (note==null)?"+ ":">>";
             }
 
             @Nullable
             @Override
             public String getToolTip(int line, Editor editor) {
-                return noteService.getNote(path, line);
+                return noteService.getNoteContent(path, line);
             }
 
             @Override
@@ -58,7 +59,7 @@ public class NoteAnnotationServiceImpl implements NoteAnnotationService {
             @Nullable
             @Override
             public Color getBgColor(int line, Editor editor) {
-                String note = noteService.getNote(path, line);
+                Note note = noteService.getNote(path, line);
                 return (note==null)?null:Color.white;
             }
 

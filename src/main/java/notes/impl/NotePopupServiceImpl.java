@@ -59,7 +59,9 @@ public class NotePopupServiceImpl implements NotePopupService {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
 
         noteTextArea = new JTextArea(20, 50);
-        final String noteText = noteService.getNote(path, lineNo);
+
+        final String noteText = noteService.getNoteContent(path, lineNo);
+
         if(noteText==null) editable=true;
 
         noteTextArea.setText(noteText);
