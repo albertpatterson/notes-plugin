@@ -35,16 +35,22 @@ public class NotePopupServiceImpl implements NotePopupService {
 
         final JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
         JComponent popupContent = createContent();
-        jbPopup = jbPopupFactory.createComponentPopupBuilder(popupContent, noteTextArea).createPopup();
+        jbPopup = jbPopupFactory.createComponentPopupBuilder(popupContent, noteTextArea)
+                .setResizable(false)
+                .setTitle("Note")
+                .setMovable(true)
+                .setFocusable(true)
+                .setRequestFocus(true)
+                .createPopup();
+
         jbPopup.addListener(new JBPopupListener.Adapter(){
             @Override
             public void onClosed(LightweightWindowEvent event) {
                 if (editted) saveUpdate();
-                jbPopup = null;
-                noteTextArea = null;
-                path = null;
+                reset();
             }
         });
+
         jbPopup.showInBestPositionFor(editor);
     }
 
@@ -127,5 +133,14 @@ public class NotePopupServiceImpl implements NotePopupService {
     private void saveUpdate() {
         String noteText = noteTextArea.getText();
         noteService.putNote(path, lineNo, noteText);
+    }
+
+    private void reset(){
+        jbPopup = null;
+        noteTextArea = null;
+        editable = false;
+        editted = false;
+        path = null;
+        lineNo = -1;
     }
 }
