@@ -10,13 +10,13 @@ public interface NoteService {
         return ServiceManager.getService(NoteService.class);
     }
 
-    public Note getNote(String path, int lineNo);
+    Note getNote(String path, int lineNo);
 
-    public Stream<Note> getNotes();
+    Note[] getNotes();
 
-    public String getNoteContent(String path, int lineNo);
+    String getNoteContent(String path, int lineNo);
 
-    public void putNote(String path, int lineNo, String note);
+    void putNote(String path, int lineNo, String note);
 
-    public void deleteNote(String path, int lineNo);
+    void deleteNote(String path, int lineNo);
 }

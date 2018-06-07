@@ -8,5 +8,5 @@ public interface NotePopupService {
         return ServiceManager.getService(NotePopupService.class);
     }
 
-    public void create(String _path, int _lineNo, Editor editor);
+    void create(String _path, int _lineNo, Editor editor);
 }

@@ -22,12 +22,18 @@
                             serviceImplementation="notes.impl.NoteAnnotationServiceImpl"/>
         <applicationService serviceInterface="notes.NotePopupService"
                             serviceImplementation="notes.impl.NotePopupServiceImpl"/>
+        <applicationService serviceInterface="notes.NoteListService"
+                            serviceImplementation="notes.impl.NoteListServiceImpl"/>
     </extensions>
 
     <actions>
-        <action id="MyPlugin.notes.ShowNoteAnnotations" class="notes.ShowNoteAnnotations" text="Show notes.Note Annotations"
+        <action id="notes-plugin.notes.ShowNoteAnnotations" class="notes.ShowNoteAnnotations" text="Show notes.Note Annotations"
                 description="show note annotations">
             <add-to-group group-id="EditorGutterPopupMenu" anchor="first"/>
+        </action>
+        <action id="notes-plugin.notes.showNotesList" class="notes.ShowNotesList" text="show notes list"
+                description="show the notes list">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>

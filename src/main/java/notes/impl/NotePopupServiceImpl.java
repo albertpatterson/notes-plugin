@@ -51,7 +51,11 @@ public class NotePopupServiceImpl implements NotePopupService {
             }
         });
 
-        jbPopup.showInBestPositionFor(editor);
+        if(editor!=null){
+            jbPopup.showInBestPositionFor(editor);
+        }else{
+            jbPopup.showInFocusCenter();
+        }
     }
 
     private JComponent createContent(){

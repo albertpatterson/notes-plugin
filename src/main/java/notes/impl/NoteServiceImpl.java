@@ -26,8 +26,8 @@ public class NoteServiceImpl implements NoteService {
         return decodeNote(encodedNote);
     }
 
-    public Stream<Note> getNotes(){
-        return keys.stream().map(k -> getNote(k));
+    public Note[] getNotes(){
+        return keys.stream().map(k -> getNote(k)).toArray(Note[]::new);
     }
 
     public String getNoteContent(String path, int lineNo){
@@ -37,7 +37,7 @@ public class NoteServiceImpl implements NoteService {
 
     public void putNote(String path, int lineNo, String content) {
         final String key = getKey(path, lineNo);
-        Note note = new Note(content);
+        Note note = new Note(path, lineNo, content);
         String encodedNote = encodeNote(note);
         propertiesComponent.setValue(key, encodedNote);
 
@@ -60,16 +60,23 @@ public class NoteServiceImpl implements NoteService {
     }
 
     private String encodeNote(Note note){
-        return note.updated.getTime() + ":" + note.content;
+        return String.join(":",
+                    new String[]{
+                            note.filepath,
+                            String.valueOf(note.lineNo),
+                            String.valueOf(note.updated.getTime()),
+                            note.content});
     }
 
     private Note decodeNote(String encodedNote){
         if(encodedNote==null) return null;
 
-        String[] parts = encodedNote.split(":", 2);
-        Date updated = new Date(Long.parseLong(parts[0]));
-        String content = parts[1];
-        return new Note(content, updated);
+        String[] parts = encodedNote.split(":");
+        final String filepath = parts[0];
+        final int lineNo = Integer.parseInt(parts[1]);
+        final Date updated = new Date(Long.parseLong(parts[2]));
+        final String content = parts[3];
+        return new Note(filepath, lineNo, content, updated);
     }
 
     private ArrayList<String> getKeys(){
