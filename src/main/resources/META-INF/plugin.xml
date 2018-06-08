@@ -17,12 +17,12 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceInterface="notes.NoteService" serviceImplementation="notes.impl.NoteServiceImpl"/>
-        <applicationService serviceInterface="notes.NoteAnnotationService"
+        <projectService serviceInterface="notes.NoteService" serviceImplementation="notes.impl.NoteServiceImpl"/>
+        <projectService serviceInterface="notes.NoteAnnotationService"
                             serviceImplementation="notes.impl.NoteAnnotationServiceImpl"/>
-        <applicationService serviceInterface="notes.NotePopupService"
+        <projectService serviceInterface="notes.NotePopupService"
                             serviceImplementation="notes.impl.NotePopupServiceImpl"/>
-        <applicationService serviceInterface="notes.NoteListService"
+        <projectService serviceInterface="notes.NoteListService"
                             serviceImplementation="notes.impl.NoteListServiceImpl"/>
     </extensions>
 

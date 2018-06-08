@@ -1,13 +1,13 @@
 package notes;
 
 import com.intellij.openapi.components.ServiceManager;
-
-import java.util.stream.Stream;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 public interface NoteService {
 
-    static NoteService getInstance() {
-        return ServiceManager.getService(NoteService.class);
+    static NoteService getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, NoteService.class);
     }
 
     Note getNote(String path, int lineNo);

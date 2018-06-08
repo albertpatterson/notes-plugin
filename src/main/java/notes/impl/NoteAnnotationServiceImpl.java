@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.EditorGutterAction;
 import com.intellij.openapi.editor.TextAnnotationGutterProvider;
 import com.intellij.openapi.editor.colors.ColorKey;
 import com.intellij.openapi.editor.colors.EditorFontType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import notes.Note;
 import notes.NoteAnnotationService;
@@ -22,8 +23,13 @@ import java.util.List;
 
 public class NoteAnnotationServiceImpl implements NoteAnnotationService {
 
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
-    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
+    private NoteService noteService;
+    private NotePopupService notePopupService;
+
+    public NoteAnnotationServiceImpl(Project project) {
+        noteService = ServiceManager.getService(project, NoteService.class);
+        notePopupService = ServiceManager.getService(project, NotePopupService.class);
+    }
 
     public void create(AnActionEvent e){
 

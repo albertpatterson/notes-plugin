@@ -2,6 +2,7 @@ package notes.impl;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.JBPopupListener;
@@ -19,7 +20,7 @@ import java.awt.event.ActionListener;
 
 public class NotePopupServiceImpl implements NotePopupService {
 
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
+    private NoteService noteService;
     private JBPopup jbPopup;
     private JTextArea noteTextArea;
     private Boolean editable = false;
@@ -27,6 +28,9 @@ public class NotePopupServiceImpl implements NotePopupService {
     private String path;
     private int lineNo;
 
+    public NotePopupServiceImpl(Project project) {
+        noteService = ServiceManager.getService(project, NoteService.class);
+    }
 
     public void create(String _path, int _lineNo, Editor editor){
 

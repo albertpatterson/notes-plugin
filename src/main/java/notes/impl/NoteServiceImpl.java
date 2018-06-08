@@ -1,20 +1,25 @@
 package notes.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.project.Project;
 import notes.NoteService;
 import notes.Note;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.stream.Stream;
 
 public class NoteServiceImpl implements NoteService {
 
     // todo: use PersistentStateComponent
-    final private PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
+    private PropertiesComponent propertiesComponent;
 
-    private ArrayList<String> keys = getKeys();
+    private ArrayList<String> keys;
+
+    public NoteServiceImpl(Project project) {
+        propertiesComponent = PropertiesComponent.getInstance(project);
+        keys = getKeys();
+    }
 
     public Note getNote(String path, int lineNo) {
         final String key = getKey(path, lineNo);

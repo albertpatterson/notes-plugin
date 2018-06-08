@@ -25,9 +25,14 @@ import java.util.Arrays;
 
 public class NoteListServiceImpl implements NoteListService {
 
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
-    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
+    private NoteService noteService;
+    private NotePopupService notePopupService;
     private JBPopup jbPopup;
+
+    public NoteListServiceImpl(Project project) {
+        notePopupService = ServiceManager.getService(project, NotePopupService.class);
+        noteService = ServiceManager.getService(project, NoteService.class);
+    }
 
     @Override
     public void create(AnActionEvent e) {
