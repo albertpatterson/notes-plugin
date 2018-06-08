@@ -66,7 +66,7 @@ public class NoteListServiceImpl implements NoteListService {
                 final Note note = notes[idx];
                 final String filepath = note.filepath;
                 final File file = new File(filepath);
-                final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(new File(filepath));
+                final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
                 final Project project = e.getProject();
                 if(project!=null && virtualFile!=null){
                     new OpenFileDescriptor(e.getProject(), virtualFile).navigate(true);
