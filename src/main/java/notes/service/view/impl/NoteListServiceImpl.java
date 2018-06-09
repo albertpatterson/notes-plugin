@@ -1,8 +1,10 @@
-package notes.impl;
+package notes.service.view.impl;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -10,10 +12,10 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import notes.Note;
-import notes.NoteListService;
-import notes.NotePopupService;
-import notes.NoteService;
+import notes.service.controller.NoteService;
+import notes.service.model.Note;
+import notes.service.view.NoteListService;
+import notes.service.view.NotePopupService;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -25,17 +27,18 @@ import java.util.Arrays;
 
 public class NoteListServiceImpl implements NoteListService {
 
-    private NoteService noteService;
-    private NotePopupService notePopupService;
+    private NoteService noteService = ServiceManager.getService(NoteService.class);
+    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
     private JBPopup jbPopup;
-
-    public NoteListServiceImpl(Project project) {
-        notePopupService = ServiceManager.getService(project, NotePopupService.class);
-        noteService = ServiceManager.getService(project, NoteService.class);
-    }
 
     @Override
     public void create(AnActionEvent e) {
+
+        Project project = e.getProject();
+        if(project==null) return;
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        noteService.setProjectAndModules(project, modules);
+
         final JComponent popupContent = createContents(e);
 
         final JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
@@ -75,7 +78,7 @@ public class NoteListServiceImpl implements NoteListService {
                 final Project project = e.getProject();
                 if(project!=null && virtualFile!=null){
                     new OpenFileDescriptor(e.getProject(), virtualFile).navigate(true);
-                    notePopupService.create(note.filepath, note.lineNo, null);
+                    notePopupService.create(e, note.filepath, note.lineNo);
                 }
                 jbPopup.closeOk(null);
             }

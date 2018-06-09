@@ -1,7 +1,11 @@
-package notes.impl;
+package notes.service.view.impl;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
@@ -9,8 +13,8 @@ import com.intellij.openapi.ui.popup.JBPopupListener;
 import com.intellij.openapi.ui.popup.LightweightWindowEvent;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
-import notes.NotePopupService;
-import notes.NoteService;
+import notes.service.controller.NoteService;
+import notes.service.view.NotePopupService;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -20,7 +24,7 @@ import java.awt.event.ActionListener;
 
 public class NotePopupServiceImpl implements NotePopupService {
 
-    private NoteService noteService;
+    private NoteService noteService = ServiceManager.getService(NoteService.class);
     private JBPopup jbPopup;
     private JTextArea noteTextArea;
     private Boolean editable = false;
@@ -28,11 +32,13 @@ public class NotePopupServiceImpl implements NotePopupService {
     private String path;
     private int lineNo;
 
-    public NotePopupServiceImpl(Project project) {
-        noteService = ServiceManager.getService(project, NoteService.class);
-    }
+    public void create(AnActionEvent e, String _path, int _lineNo){
 
-    public void create(String _path, int _lineNo, Editor editor){
+        Project project = e.getProject();
+        if(project==null) return;
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        noteService.setProjectAndModules(project, modules);
+        Editor editor = e.getData(CommonDataKeys.EDITOR);
 
         path = _path;
         lineNo = _lineNo;

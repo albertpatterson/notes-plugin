@@ -1,4 +1,4 @@
-package notes;
+package notes.service.model;
 
 import java.util.Date;
 

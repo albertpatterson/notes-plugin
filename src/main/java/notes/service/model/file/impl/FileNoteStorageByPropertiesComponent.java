@@ -1,23 +1,21 @@
-package notes.impl;
+package notes.service.model.file.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.project.Project;
-import notes.NoteService;
-import notes.Note;
+import notes.service.model.Note;
+import notes.service.model.file.FileNoteStorageService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class NoteServiceImpl implements NoteService {
+public class FileNoteStorageByPropertiesComponent implements FileNoteStorageService {
 
-    // todo: use PersistentStateComponent
     private PropertiesComponent propertiesComponent;
 
     private ArrayList<String> keys;
 
-    public NoteServiceImpl(Project project) {
-        propertiesComponent = PropertiesComponent.getInstance(project);
+    public FileNoteStorageByPropertiesComponent() {
+        propertiesComponent = PropertiesComponent.getInstance();
         keys = getKeys();
     }
 
@@ -33,11 +31,6 @@ public class NoteServiceImpl implements NoteService {
 
     public Note[] getNotes(){
         return keys.stream().map(k -> getNote(k)).toArray(Note[]::new);
-    }
-
-    public String getNoteContent(String path, int lineNo){
-        final Note note = getNote(path, lineNo);
-        return (note==null)?null:note.content;
     }
 
     public void putNote(String path, int lineNo, String content) {
@@ -66,11 +59,11 @@ public class NoteServiceImpl implements NoteService {
 
     private String encodeNote(Note note){
         return String.join(":",
-                    new String[]{
-                            note.filepath,
-                            String.valueOf(note.lineNo),
-                            String.valueOf(note.updated.getTime()),
-                            note.content});
+                new String[]{
+                        note.filepath,
+                        String.valueOf(note.lineNo),
+                        String.valueOf(note.updated.getTime()),
+                        note.content});
     }
 
     private Note decodeNote(String encodedNote){
