@@ -8,7 +8,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorGutter;
 import notes.service.view.NoteAnnotationService;
 
-public class ShowNoteAnnotations extends AnAction {
+public class ShowLineNoteAnnotations extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {

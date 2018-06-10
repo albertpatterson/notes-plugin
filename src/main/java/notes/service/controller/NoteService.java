@@ -3,7 +3,7 @@ package notes.service.controller;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleServiceManager;
 import com.intellij.openapi.project.Project;
-import notes.service.model.Note;
+import notes.service.model.LineNote;
 import org.jetbrains.annotations.NotNull;
 
 public interface NoteService {
@@ -14,9 +14,9 @@ public interface NoteService {
 
     void setProjectAndModules(Project project, Module[] modules);
 
-    Note getNote(String path, int lineNo);
+    LineNote getNote(String path, int lineNo);
 
-    Note[] getNotes();
+    LineNote[] getNotes();
 
     String getNoteContent(String path, int lineNo);
 

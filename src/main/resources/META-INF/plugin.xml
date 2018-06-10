@@ -19,13 +19,10 @@
     <extensions defaultExtensionNs="com.intellij">
         <!--model-->
         <!--Todo: use persistent state component impl-->
-        <applicationService serviceInterface="notes.service.model.file.FileNoteStorageService"
-                            serviceImplementation="notes.service.model.file.impl.FileNoteStorageByPropertiesComponent"/>
-         <moduleService serviceInterface="notes.service.model.module.ModuleNoteStorageService"
-                            serviceImplementation="notes.service.model.module.impl.ModuleNoteStorageByPropertiesComponent"/>
-         <projectService serviceInterface="notes.service.model.project.ProjectNoteStorageService"
-                            serviceImplementation="notes.service.model.project.impl.ProjectNoteStorageByPropertiesComponent"/>
-
+        <moduleService serviceInterface="notes.service.model.module.NoteStorageService"
+                       serviceImplementation="notes.service.model.module.impl.NoteStorageServicePropertiesComponentImpl"/>
+        <moduleService serviceInterface="notes.service.model.module.LineNoteStorageService"
+                       serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePropertiesComponentImpl"/>
         <!--controller-->
         <applicationService serviceInterface="notes.service.controller.NoteService" serviceImplementation="notes.service.controller.impl.NoteServiceImpl"/>
 
@@ -40,13 +37,17 @@
     </extensions>
 
     <actions>
-        <action id="notes-plugin.notes.action.ShowNoteAnnotations" class="notes.action.ShowNoteAnnotations" text="Show notes.service.model.Note Annotations"
+        <action id="notes-plugin.notes.action.ShowLineNoteAnnotations" class="notes.action.ShowLineNoteAnnotations" text="Show Note Annotations"
                 description="show note annotations">
             <add-to-group group-id="EditorGutterPopupMenu" anchor="first"/>
         </action>
         <action id="notes-plugin.notes.showNotesList" class="notes.action.ShowNotesList" text="show notes list"
                 description="show the notes list">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+        </action>
+        <action id="notes-plugin.notes.action.show-file-note" class="notes.action.ShowFileNote"
+                text="Show Note" description="show file note">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
     </actions>
 </idea-plugin>

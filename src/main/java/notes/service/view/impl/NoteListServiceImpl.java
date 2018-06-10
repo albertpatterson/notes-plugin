@@ -13,7 +13,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import notes.service.controller.NoteService;
-import notes.service.model.Note;
+import notes.service.model.LineNote;
 import notes.service.view.NoteListService;
 import notes.service.view.NotePopupService;
 
@@ -58,7 +58,7 @@ public class NoteListServiceImpl implements NoteListService {
         final JPanel jPanel = new JPanel();
 
 
-        final Note[] notes = noteService.getNotes();
+        final LineNote[] notes = noteService.getNotes();
 
         final String[] previews = Arrays.stream(notes).map(
                 note->String.join(": ", new String[]{note.filepath, String.valueOf(1+note.lineNo)})
@@ -71,7 +71,7 @@ public class NoteListServiceImpl implements NoteListService {
             @Override
             public void valueChanged(ListSelectionEvent selectionEvent) {
                 final int idx = selectionEvent.getFirstIndex();
-                final Note note = notes[idx];
+                final LineNote note = notes[idx];
                 final String filepath = note.filepath;
                 final File file = new File(filepath);
                 final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
