@@ -12,7 +12,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import notes.service.controller.NoteService;
+import notes.service.controller.LineNoteService;
 import notes.service.model.LineNote;
 import notes.service.view.NoteListService;
 import notes.service.view.NotePopupService;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 public class NoteListServiceImpl implements NoteListService {
 
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
+    private LineNoteService lineNoteService = ServiceManager.getService(LineNoteService.class);
     private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
     private JBPopup jbPopup;
 
@@ -37,7 +37,7 @@ public class NoteListServiceImpl implements NoteListService {
         Project project = e.getProject();
         if(project==null) return;
         Module[] modules = ModuleManager.getInstance(project).getModules();
-        noteService.setProjectAndModules(project, modules);
+        lineNoteService.setProjectAndModules(project, modules);
 
         final JComponent popupContent = createContents(e);
 
@@ -58,9 +58,9 @@ public class NoteListServiceImpl implements NoteListService {
         final JPanel jPanel = new JPanel();
 
 
-        final LineNote[] notes = noteService.getNotes();
+        final LineNote[] lineNotes = lineNoteService.getNotesStream().toArray(LineNote[]::new);
 
-        final String[] previews = Arrays.stream(notes).map(
+        final String[] previews = Arrays.stream(lineNotes).map(
                 note->String.join(": ", new String[]{note.filepath, String.valueOf(1+note.lineNo)})
         ).toArray(String[]::new);
 
@@ -71,14 +71,14 @@ public class NoteListServiceImpl implements NoteListService {
             @Override
             public void valueChanged(ListSelectionEvent selectionEvent) {
                 final int idx = selectionEvent.getFirstIndex();
-                final LineNote note = notes[idx];
+                final LineNote note = lineNotes[idx];
                 final String filepath = note.filepath;
                 final File file = new File(filepath);
                 final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
                 final Project project = e.getProject();
                 if(project!=null && virtualFile!=null){
                     new OpenFileDescriptor(e.getProject(), virtualFile).navigate(true);
-                    notePopupService.create(e, note.filepath, note.lineNo);
+                    notePopupService.create(e, note);
                 }
                 jbPopup.closeOk(null);
             }
@@ -95,7 +95,7 @@ public class NoteListServiceImpl implements NoteListService {
             public void mouseMoved(MouseEvent e) {
                 int index = jbList.locationToIndex(e.getPoint());
                 if(index>-1){
-                    jbList.setToolTipText(notes[index].content);
+                    jbList.setToolTipText(lineNotes[index].content);
                 }
             }
         });

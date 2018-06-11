@@ -6,14 +6,15 @@ import notes.service.model.module.LineNoteStorageService;
 
 import java.util.Date;
 
-public class LineNoteStorageServicePropertiesComponentImpl extends PropertiesComponentStore<LineNote> implements LineNoteStorageService {
+public class LineNoteStorageServicePropertiesComponent extends PropertiesComponentStorageService<LineNote> implements LineNoteStorageService {
 
-    public LineNoteStorageServicePropertiesComponentImpl(Module module) {
+    public LineNoteStorageServicePropertiesComponent(Module module) {
         super(module, "line-note");
     }
 
-    public String getModulePath() {
-        return modulePath;
+    @Override
+    String createUniqueKey(LineNote lineNote) {
+        return lineNote.filepath + ":" + lineNote.lineNo;
     }
 
     @Override
@@ -39,31 +40,26 @@ public class LineNoteStorageServicePropertiesComponentImpl extends PropertiesCom
     }
 
     @Override
-    public LineNote getLineNote(String path, int lineNo) {
-        final String key = getKey(path, lineNo);
+    public LineNote getNote(String key) {
+        if(!key.matches("([^:]*):(\\d*)")){
+            System.out.println("Invalid key for Line note: "+key);
+            return null;
+        }
         return getValue(key);
     }
 
-    private String getKey(String path, int lineNo) {
-        return path + ":" + lineNo;
-    }
-
     @Override
-    public LineNote[] getLineNotes() {
+    public LineNote[] getNotes() {
         return getValuesStream().toArray(LineNote[]::new);
     }
 
-
     @Override
-    public void putLineNote(String path, int lineNo, String content) {
-        final String key = getKey(path, lineNo);
-        final LineNote lineNote = new LineNote(path, lineNo, content);
-        setValue(key, lineNote);
+    public void putNote(LineNote lineNote) {
+        setValue(lineNote);
     }
 
     @Override
-    public void deleteLineNote(String path, int lineNo) {
-        final String key = getKey(path, lineNo);
-        deleteValue(key);
+    public void deleteNote(LineNote lineNote) {
+        deleteValue(lineNote);
     }
 }

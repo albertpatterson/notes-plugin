@@ -20,20 +20,25 @@
         <!--model-->
         <!--Todo: use persistent state component impl-->
         <moduleService serviceInterface="notes.service.model.module.NoteStorageService"
-                       serviceImplementation="notes.service.model.module.impl.NoteStorageServicePropertiesComponentImpl"/>
+                       serviceImplementation="notes.service.model.module.impl.NoteStorageServicePropertiesComponent"/>
         <moduleService serviceInterface="notes.service.model.module.LineNoteStorageService"
-                       serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePropertiesComponentImpl"/>
+                       serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePropertiesComponent"/>
         <!--controller-->
         <applicationService serviceInterface="notes.service.controller.NoteService" serviceImplementation="notes.service.controller.impl.NoteServiceImpl"/>
+        <applicationService serviceInterface="notes.service.controller.LineNoteService" serviceImplementation="notes.service.controller.impl.LineNoteServiceImpl"/>
 
         <!--view-->
         <applicationService serviceInterface="notes.service.view.NoteAnnotationService"
-                            serviceImplementation="notes.service.view.impl.NoteAnnotationServiceImpl"/>
+                            serviceImplementation="notes.service.view.impl.LineNoteAnnotationServiceImpl"/>
         <applicationService serviceInterface="notes.service.view.NotePopupService"
                             serviceImplementation="notes.service.view.impl.NotePopupServiceImpl"/>
+        <applicationService serviceInterface="notes.service.view.LineNotePopupService"
+                            serviceImplementation="notes.service.view.impl.LineNotePopupServiceImpl"/>
         <applicationService serviceInterface="notes.service.view.NoteListService"
                             serviceImplementation="notes.service.view.impl.NoteListServiceImpl"/>
 
+        <moduleService serviceInterface="notes.service.controller.LineNoteService"
+                       serviceImplementation="notes.service.controller.impl.LineNoteServiceImpl"/>
     </extensions>
 
     <actions>

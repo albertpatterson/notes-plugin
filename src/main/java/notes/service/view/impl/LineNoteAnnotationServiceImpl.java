@@ -15,19 +15,20 @@ import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
-import notes.service.controller.NoteService;
+import notes.service.controller.LineNoteService;
+import notes.service.model.LineNote;
 import notes.service.model.Note;
+import notes.service.view.LineNotePopupService;
 import notes.service.view.NoteAnnotationService;
-import notes.service.view.NotePopupService;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.List;
 
-public class NoteAnnotationServiceImpl implements NoteAnnotationService {
+public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
 
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
-    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
+    private LineNoteService noteService = ServiceManager.getService(LineNoteService.class);
+    private LineNotePopupService lineNotePopupService = ServiceManager.getService(LineNotePopupService.class);
 
     public void create(AnActionEvent e){
 
@@ -45,14 +46,15 @@ public class NoteAnnotationServiceImpl implements NoteAnnotationService {
 
             @Override
             public String getLineText(int line, Editor editor) {
-                Note note = noteService.getNote(path, line);
+                Note note = noteService.getNote(LineNoteService.makeKey(path, line));
                 return (note==null)?"+ ":">>";
             }
 
             @Nullable
             @Override
             public String getToolTip(int line, Editor editor) {
-                return noteService.getNoteContent(path, line);
+                Note note = noteService.getNote(LineNoteService.makeKey(path, line));
+                return (note==null)?"":note.content;
             }
 
             @Override
@@ -68,7 +70,7 @@ public class NoteAnnotationServiceImpl implements NoteAnnotationService {
             @Nullable
             @Override
             public Color getBgColor(int line, Editor editor) {
-                Note note = noteService.getNote(path, line);
+                Note note = noteService.getNote(LineNoteService.makeKey(path, line));
                 return (note==null)?null: JBColor.WHITE;
             }
 
@@ -86,7 +88,9 @@ public class NoteAnnotationServiceImpl implements NoteAnnotationService {
             @Override
             public void doAction(int lineNum) {
                 editor.getCaretModel().moveToOffset(editor.getDocument().getLineStartOffset(lineNum));
-                notePopupService.create(e, path, lineNum);
+                LineNote lineNote = noteService.getNote(LineNoteService.makeKey(path, lineNum));
+                if(lineNote==null) lineNote = new LineNote(path, lineNum, "");
+                lineNotePopupService.create(e, lineNote);
             }
 
             @Override

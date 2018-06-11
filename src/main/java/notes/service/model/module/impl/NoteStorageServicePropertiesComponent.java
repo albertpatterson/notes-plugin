@@ -6,13 +6,14 @@ import notes.service.model.module.NoteStorageService;
 
 import java.util.Date;
 
-public class NoteStorageServicePropertiesComponentImpl extends PropertiesComponentStore<Note> implements NoteStorageService {
-    public NoteStorageServicePropertiesComponentImpl(Module module) {
+public class NoteStorageServicePropertiesComponent extends PropertiesComponentStorageService<Note> implements NoteStorageService {
+    public NoteStorageServicePropertiesComponent(Module module) {
         super(module, "note");
     }
 
-    public String getModulePath() {
-        return modulePath;
+    @Override
+    String createUniqueKey(Note note) {
+        return note.filepath;
     }
 
     @Override
@@ -21,8 +22,9 @@ public class NoteStorageServicePropertiesComponentImpl extends PropertiesCompone
 
         String[] parts = encoding.split(":");
         final String filepath = parts[0];
-        final Date updated = new Date(Long.parseLong(parts[1]));
-        final String content = parts[2];
+        final int lineNo = Integer.parseInt(parts[1]);
+        final Date updated = new Date(Long.parseLong(parts[2]));
+        final String content = parts[3];
         return new Note(filepath, content, updated);
     }
 
@@ -36,29 +38,26 @@ public class NoteStorageServicePropertiesComponentImpl extends PropertiesCompone
     }
 
     @Override
-    public Note getNote(String path) {
-        final String key = getKey(path);
+    public Note getNote(String key) {
+        if(!key.matches("([^:]*):(\\d*)")){
+            System.out.println("Invalid key for Line note: "+key);
+            return null;
+        }
         return getValue(key);
-    }
-
-    private String getKey(String path) {
-        return path;
     }
 
     @Override
     public Note[] getNotes() {
-return null;    }
-
-    @Override
-    public void putNote(String path, String content) {
-        final String key = getKey(path);
-        final Note note = new Note(path, content);
-        setValue(key, note);
+        return getValuesStream().toArray(Note[]::new);
     }
 
     @Override
-    public void deleteNote(String path) {
-        final String key = getKey(path);
-        deleteValue(key);
+    public void putNote(Note note) {
+        setValue(note);
+    }
+
+    @Override
+    public void deleteNote(Note note) {
+        deleteValue(note);
     }
 }

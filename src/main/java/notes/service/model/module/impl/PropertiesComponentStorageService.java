@@ -8,7 +8,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public abstract class PropertiesComponentStore<T> {
+public abstract class PropertiesComponentStorageService<T> {
+
+    abstract String createUniqueKey(T t);
+
+    abstract String encode(T t);
+
+    abstract T decode(String encoding);
 
     private String moduleDataKey;
     private String moduleKeysKey;
@@ -16,7 +22,7 @@ public abstract class PropertiesComponentStore<T> {
     protected PropertiesComponent propertiesComponent;
     private ArrayList<String> keys;
 
-    protected PropertiesComponentStore(Module module, String dataId){
+    protected PropertiesComponentStorageService(Module module, String dataId){
 
         VirtualFile virtualFile = module.getModuleFile();
         if(virtualFile==null) throw new Error("Module with null virtual file provide");
@@ -25,6 +31,10 @@ public abstract class PropertiesComponentStore<T> {
         moduleDataKey = "notes-plugin-keys-" + dataId + "-" + modulePath;
         moduleKeysKey = moduleDataKey + "-keys";
         keys = getKeys();
+    }
+
+    public String getModulePath() {
+        return modulePath;
     }
 
     private ArrayList<String> getKeys(){
@@ -48,8 +58,6 @@ public abstract class PropertiesComponentStore<T> {
         return keys.stream().map(this::getValueFromFullKey);
     }
 
-    abstract T decode(String encoding);
-
     protected T getValue(String suffix){
         final String key = makeKey(suffix);
         return getValueFromFullKey(key);
@@ -62,8 +70,8 @@ public abstract class PropertiesComponentStore<T> {
         return value;
     }
 
-    protected void setValue(String suffix, T t) {
-        final String key = makeKey(suffix);
+    protected void setValue(T t) {
+        final String key = makeKey(createUniqueKey(t));
         String encoding = encode(t);
         propertiesComponent.setValue(key, encoding);
         if(!keys.contains(key)) {
@@ -72,10 +80,8 @@ public abstract class PropertiesComponentStore<T> {
         }
     }
 
-    abstract String encode(T t);
-
-    protected void deleteValue(String suffix) {
-        final String key = makeKey(suffix);
+    protected void deleteValue(T t) {
+        final String key = makeKey(createUniqueKey(t));
         propertiesComponent.unsetValue(key);
         keys.remove(key);
         propertiesComponent.setValues(moduleKeysKey, keys.toArray(new String[keys.size()]));

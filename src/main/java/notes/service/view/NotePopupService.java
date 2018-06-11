@@ -1,13 +1,12 @@
 package notes.service.view;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
+import notes.service.model.Note;
 
-public interface NotePopupService {
+public interface NotePopupService extends GenericNotePopupService<Note>{
 
     static NotePopupService getInstance() {
         return ServiceManager.getService(NotePopupService.class);
     }
 
-    void create(AnActionEvent e, String _path, int _lineNo);
 }
