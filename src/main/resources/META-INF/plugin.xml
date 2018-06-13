@@ -51,7 +51,7 @@
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
         </action>
         <action id="notes-plugin.notes.action.show-file-note" class="notes.action.ShowFileNote"
-                text="Show Note" description="show file note">
+                text="Add Note" description="show file note">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
     </actions>

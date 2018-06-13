@@ -22,9 +22,8 @@ public class NoteStorageServicePropertiesComponent extends PropertiesComponentSt
 
         String[] parts = encoding.split(":");
         final String filepath = parts[0];
-        final int lineNo = Integer.parseInt(parts[1]);
-        final Date updated = new Date(Long.parseLong(parts[2]));
-        final String content = parts[3];
+        final Date updated = new Date(Long.parseLong(parts[1]));
+        final String content = parts[2];
         return new Note(filepath, content, updated);
     }
 
@@ -39,8 +38,8 @@ public class NoteStorageServicePropertiesComponent extends PropertiesComponentSt
 
     @Override
     public Note getNote(String key) {
-        if(!key.matches("([^:]*):(\\d*)")){
-            System.out.println("Invalid key for Line note: "+key);
+        if(!key.matches("([^:]*)")){
+            System.out.println("Invalid key for note: "+key);
             return null;
         }
         return getValue(key);
