@@ -12,8 +12,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.JBTabbedPane;
 import notes.service.controller.LineNoteService;
+import notes.service.controller.NoteService;
 import notes.service.model.LineNote;
+import notes.service.model.Note;
 import notes.service.view.NoteListService;
 import notes.service.view.NotePopupService;
 
@@ -28,6 +31,7 @@ import java.util.Arrays;
 public class NoteListServiceImpl implements NoteListService {
 
     private LineNoteService lineNoteService = ServiceManager.getService(LineNoteService.class);
+    private NoteService noteService = ServiceManager.getService(NoteService.class);
     private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
     private JBPopup jbPopup;
 
@@ -38,6 +42,7 @@ public class NoteListServiceImpl implements NoteListService {
         if(project==null) return;
         Module[] modules = ModuleManager.getInstance(project).getModules();
         lineNoteService.setProjectAndModules(project, modules);
+        noteService.setProjectAndModules(project, modules);
 
         final JComponent popupContent = createContents(e);
 
@@ -53,17 +58,15 @@ public class NoteListServiceImpl implements NoteListService {
         jbPopup.showCenteredInCurrentWindow(e.getProject());
     }
 
-    private JComponent createContents(AnActionEvent e){
 
+    private interface ListItem {
+        String createText(Note note);
+    }
+
+    private JPanel createNoteListPanel(AnActionEvent event, Note[] notes, ListItem listItem) {
         final JPanel jPanel = new JPanel();
 
-
-        final LineNote[] lineNotes = lineNoteService.getNotesStream().toArray(LineNote[]::new);
-
-        final String[] previews = Arrays.stream(lineNotes).map(
-                note->String.join(": ", new String[]{note.filepath, String.valueOf(1+note.lineNo)})
-        ).toArray(String[]::new);
-
+        final String[] previews = Arrays.stream(notes).map(listItem::createText).toArray(String[]::new);
 
         final JBList<String> jbList = new JBList<>(previews);
 
@@ -71,14 +74,14 @@ public class NoteListServiceImpl implements NoteListService {
             @Override
             public void valueChanged(ListSelectionEvent selectionEvent) {
                 final int idx = selectionEvent.getFirstIndex();
-                final LineNote note = lineNotes[idx];
+                final Note note = notes[idx];
                 final String filepath = note.filepath;
                 final File file = new File(filepath);
                 final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
-                final Project project = e.getProject();
+                final Project project = event.getProject();
                 if(project!=null && virtualFile!=null){
-                    new OpenFileDescriptor(e.getProject(), virtualFile).navigate(true);
-                    notePopupService.create(e, note);
+                    new OpenFileDescriptor(event.getProject(), virtualFile).navigate(true);
+                    notePopupService.create(event, note);
                 }
                 jbPopup.closeOk(null);
             }
@@ -95,15 +98,39 @@ public class NoteListServiceImpl implements NoteListService {
             public void mouseMoved(MouseEvent e) {
                 int index = jbList.locationToIndex(e.getPoint());
                 if(index>-1){
-                    jbList.setToolTipText(lineNotes[index].content);
+                    jbList.setToolTipText(notes[index].content);
                 }
             }
         });
 
+        jbList.setFixedCellWidth(750);
         final JBScrollPane jbScrollPane = new JBScrollPane(jbList);
 
         jPanel.add(jbScrollPane);
 
+        return jPanel;
+    }
+
+    private JPanel createLineNotesPanel(AnActionEvent event) {
+        final LineNote[] lineNotes = lineNoteService.getNotesStream().toArray(LineNote[]::new);
+        return createNoteListPanel(event, lineNotes, ln->String.join(": ", new String[]{ln.filepath, String.valueOf(1 + ((LineNote) ln).lineNo)}));
+    }
+
+    private JPanel createFileNotesPanel(AnActionEvent event) {
+        final Note[] notes = noteService.getNotesStream().toArray(Note[]::new);
+        return createNoteListPanel(event, notes, n->n.filepath);
+    }
+
+    private JComponent createContents(AnActionEvent e){
+
+        final JPanel jPanel = new JPanel();
+
+        JBTabbedPane jbTabbedPane = new JBTabbedPane();
+
+        jbTabbedPane.addTab("Line Notes", createLineNotesPanel(e));
+        jbTabbedPane.add("File Notes", createFileNotesPanel(e));
+
+        jPanel.add(jbTabbedPane);
         return jPanel;
     }
 }
