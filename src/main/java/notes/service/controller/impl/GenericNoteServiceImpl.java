@@ -16,23 +16,17 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
 
     abstract String getPath(String Key);
 
-    private ArrayList<U> storageServices = new ArrayList<>();
+    private ArrayList<U> storageServices;
 
     @Override
     public void setProjectAndModules(Project project, Module[] modules){
+
         System.out.println("setProjectAndModules project");
         System.out.println(project);
 
         System.out.println("setProjectAndModules modules");
-        storageServices.clear();
-        Arrays.stream(modules).forEach(m-> {
-            System.out.println(m.getName());
-            storageServices.add(getStorageService(m));
-        });
-
-        storageServices.sort((s1, s2)->s2.getModulePath().compareTo(s1.getModulePath()));
-
-        storageServices.stream().map(U::getModulePath).forEach(System.out::println);
+        storageServices = null;
+        setupStorageServices(modules);
     }
 
     @Override
@@ -53,9 +47,23 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
                 .orElseThrow(()->new Exception("No module found containing "+path));
     }
 
+    private void setupStorageServices(Module[] modules) {
+
+        storageServices = new ArrayList<>(modules.length);
+
+        Arrays.stream(modules).forEach(m-> {
+                System.out.println(m.getModuleFilePath());
+                storageServices.add(getStorageService(m));
+        });
+
+        storageServices.sort((s1, s2)->s2.getModulePath().compareTo(s1.getModulePath()));
+    }
+
     @Override
     public Stream<T> getNotesStream() {
-        return storageServices.stream().flatMap(s -> Arrays.stream(s.getNotes()));
+        return storageServices
+                .stream()
+                .flatMap(s -> Arrays.stream(s.getNotes()));
     }
 
     @Override

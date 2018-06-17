@@ -37,6 +37,12 @@ public class ShowFileNote extends AnAction {
     @Override
     public void update(AnActionEvent e) {
 
+        Project project = e.getProject();
+        if(project==null) return;
+
+        Module[] modules = ModuleManager.getInstance(project).getModules();
+        noteService.setProjectAndModules(project, modules);
+
         String filepath = getTargetPath(e);
         Note note = noteService.getNote(filepath);
 
