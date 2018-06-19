@@ -20,7 +20,7 @@
         <!--model-->
         <!--Todo: use persistent state component impl-->
         <moduleService serviceInterface="notes.service.model.module.NoteStorageService"
-                       serviceImplementation="notes.service.model.module.impl.NoteStorageServicePropertiesComponent"/>
+                       serviceImplementation="notes.service.model.module.impl.NoteStorageServicePersistentStateComponent"/>
         <moduleService serviceInterface="notes.service.model.module.LineNoteStorageService"
                        serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePropertiesComponent"/>
         <!--controller-->

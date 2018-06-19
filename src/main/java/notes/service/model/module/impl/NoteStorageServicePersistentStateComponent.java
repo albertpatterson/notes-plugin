@@ -1,14 +1,25 @@
 package notes.service.model.module.impl;
 
+import com.intellij.openapi.components.State;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleServiceManager;
 import notes.service.model.Note;
 import notes.service.model.module.NoteStorageService;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
-@Deprecated
-public class NoteStorageServicePropertiesComponent extends PropertiesComponentStorageService<Note> implements NoteStorageService {
-    public NoteStorageServicePropertiesComponent(Module module) {
+@State(
+        name = "NoteStorageServicePersistentStateComponent"
+)
+public class NoteStorageServicePersistentStateComponent extends PersistentStateComponentStorageService<Note> implements NoteStorageService {
+
+
+    static NoteStorageServicePersistentStateComponent getInstance(@NotNull Module project) {
+        return ModuleServiceManager.getService(project, NoteStorageServicePersistentStateComponent.class);
+    }
+
+    public NoteStorageServicePersistentStateComponent(Module module) {
         super(module, "note");
     }
 
@@ -61,3 +72,4 @@ public class NoteStorageServicePropertiesComponent extends PropertiesComponentSt
         deleteValue(note);
     }
 }
+
