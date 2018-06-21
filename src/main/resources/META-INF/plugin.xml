@@ -22,7 +22,7 @@
         <moduleService serviceInterface="notes.service.model.module.NoteStorageService"
                        serviceImplementation="notes.service.model.module.impl.NoteStorageServicePersistentStateComponent"/>
         <moduleService serviceInterface="notes.service.model.module.LineNoteStorageService"
-                       serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePropertiesComponent"/>
+                       serviceImplementation="notes.service.model.module.impl.LineNoteStorageServicePersistentStateComponent"/>
         <!--controller-->
         <applicationService serviceInterface="notes.service.controller.NoteService" serviceImplementation="notes.service.controller.impl.NoteServiceImpl"/>
         <applicationService serviceInterface="notes.service.controller.LineNoteService" serviceImplementation="notes.service.controller.impl.LineNoteServiceImpl"/>

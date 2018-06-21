@@ -6,6 +6,7 @@ import notes.service.model.module.LineNoteStorageService;
 
 import java.util.Date;
 
+@Deprecated
 public class LineNoteStorageServicePropertiesComponent extends PropertiesComponentStorageService<LineNote> implements LineNoteStorageService {
 
     public LineNoteStorageServicePropertiesComponent(Module module) {
