@@ -19,8 +19,9 @@ public class ShowLineNoteAnnotations extends AnAction {
     @Override
     public void update(AnActionEvent e) {
         Editor editor = e.getData(CommonDataKeys.EDITOR);
-        EditorGutter gutter = editor.getGutter();
+        if(editor == null) return;
 
+        EditorGutter gutter = editor.getGutter();
         e.getPresentation().setEnabledAndVisible(!gutter.isAnnotationsShown());
     }
 }

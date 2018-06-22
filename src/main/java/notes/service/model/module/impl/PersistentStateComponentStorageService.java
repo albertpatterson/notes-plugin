@@ -20,12 +20,10 @@ public abstract class PersistentStateComponentStorageService<T> implements Persi
 
     abstract T decode(String encoding);
 
-    private String dataId;
     private String moduleDataKey;
     private String modulePath;
 
-    protected PersistentStateComponentStorageService(Module module, String _dataId) {
-        dataId = _dataId;
+    PersistentStateComponentStorageService(Module module, String dataId) {
         modulePath = getParentDirectory(module);
         moduleDataKey = "notes-plugin-keys-" + dataId + "-" + modulePath;
         storedItem = new StoredItem();
@@ -44,12 +42,12 @@ public abstract class PersistentStateComponentStorageService<T> implements Persi
         return moduleDataKey +"-"+suffix;
     }
 
-    protected Stream<T> getValuesStream() {
+    Stream<T> getValuesStream() {
         if(storedItem.values == null) return Stream.of();
         return storedItem.values.keySet().stream().map(this::getValueFromFullKey);
     }
 
-    protected T getValue(String suffix) {
+    T getValue(String suffix) {
         final String key = makeKey(suffix);
         return getValueFromFullKey(key);
     }
@@ -58,17 +56,16 @@ public abstract class PersistentStateComponentStorageService<T> implements Persi
         if(storedItem.values == null) return null;
         final String encoding = storedItem.values.get(key);
         if(encoding==null) return null;
-        T value = decode(encoding);
-        return value;
+        return decode(encoding);
     }
 
-    protected void setValue(T t) {
+    void setValue(T t) {
         final String key = makeKey(createUniqueKey(t));
         String encoding = encode(t);
         storedItem.values.put(key, encoding);
     }
 
-    protected void deleteValue(T t) {
+    void deleteValue(T t) {
         final String key = makeKey(createUniqueKey(t));
         storedItem.values.remove(key);
     }
@@ -88,7 +85,7 @@ public abstract class PersistentStateComponentStorageService<T> implements Persi
 class StoredItem{
     public Map<String, String> values;
 
-    public StoredItem(){
+    StoredItem(){
         values = new HashMap<>();
     }
 

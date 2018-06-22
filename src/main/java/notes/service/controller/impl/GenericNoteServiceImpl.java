@@ -8,6 +8,7 @@ import notes.service.model.module.GenericNoteStorageService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
 public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNoteStorageService<T>> implements GenericNoteService<T>{
@@ -17,6 +18,7 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
     abstract String getPath(String Key);
 
     private ArrayList<U> storageServices;
+    private WeakHashMap<String, U> storageServiceCache = new WeakHashMap<>();
 
     @Override
     public void setProjectAndModules(Project project, Module[] modules){
@@ -32,12 +34,20 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
     @Override
     public T getNote(String key) {
         try {
-            // todo: cache most specific service curently called many times
-            return chooseMostSpecificModuleService(getPath(key)).getNote(key);
+            return getService(getPath(key)).getNote(key);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private U getService(String path) throws Exception {
+        if(storageServiceCache.containsKey(path)) return storageServiceCache.get(path);
+
+        U service = chooseMostSpecificModuleService(path);
+
+        storageServiceCache.put(path, service);
+        return service;
     }
 
     private U chooseMostSpecificModuleService(String path) throws Exception {
