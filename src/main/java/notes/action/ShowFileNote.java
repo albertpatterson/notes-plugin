@@ -15,8 +15,8 @@ import notes.service.view.NotePopupService;
 
 public class ShowFileNote extends AnAction {
 
-    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
+    private final NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
+    private final NoteService noteService = ServiceManager.getService(NoteService.class);
 
     @Override
     public void actionPerformed(AnActionEvent e) {

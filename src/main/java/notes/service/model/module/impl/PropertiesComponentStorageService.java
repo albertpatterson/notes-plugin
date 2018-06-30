@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-public abstract class PropertiesComponentStorageService<T> {
+@Deprecated
+abstract class PropertiesComponentStorageService<T> {
 
     abstract String createUniqueKey(T t);
 
@@ -16,19 +17,15 @@ public abstract class PropertiesComponentStorageService<T> {
 
     abstract T decode(String encoding);
 
-    private String dataId;
-    private String moduleDataKey;
-    private String moduleKeysKey;
-    protected String modulePath;
-    protected PropertiesComponent propertiesComponent;
-    private ArrayList<String> keys;
+    private final String dataId;
+    private final String moduleDataKey;
+    private final String moduleKeysKey;
+    private final String modulePath;
+    private final PropertiesComponent propertiesComponent;
+    private final ArrayList<String> keys;
 
-    protected PropertiesComponentStorageService(Module module, String _dataId) {
+    PropertiesComponentStorageService(Module module, String _dataId) {
         dataId = _dataId;
-        setModuleRelatedProperties(module);
-    }
-
-    private void setModuleRelatedProperties(Module module) {
         modulePath = getParentDirectory(module);
         propertiesComponent = PropertiesComponent.getInstance(module.getProject());
         moduleDataKey = "notes-plugin-keys-" + dataId + "-" + modulePath;
@@ -56,19 +53,15 @@ public abstract class PropertiesComponentStorageService<T> {
         return new ArrayList<>(Arrays.asList(keys));
     }
 
-    protected void setKeys(String[] keys) {
-        propertiesComponent.setValues(moduleKeysKey, keys);
-    }
-
     private String makeKey(String suffix) {
         return moduleDataKey +"-"+suffix;
     }
 
-    protected Stream<T> getValuesStream() {
+    Stream<T> getValuesStream() {
         return keys.stream().map(this::getValueFromFullKey);
     }
 
-    protected T getValue(String suffix) {
+    T getValue(String suffix) {
         final String key = makeKey(suffix);
         return getValueFromFullKey(key);
     }
@@ -76,11 +69,10 @@ public abstract class PropertiesComponentStorageService<T> {
     private T getValueFromFullKey(String key) {
         final String encoding = propertiesComponent.getValue(key);
         if(encoding==null) return null;
-        T value = decode(encoding);
-        return value;
+        return decode(encoding);
     }
 
-    protected void setValue(T t) {
+    void setValue(T t) {
         final String key = makeKey(createUniqueKey(t));
         String encoding = encode(t);
         propertiesComponent.setValue(key, encoding);
@@ -90,7 +82,7 @@ public abstract class PropertiesComponentStorageService<T> {
         }
     }
 
-    protected void deleteValue(T t) {
+    void deleteValue(T t) {
         final String key = makeKey(createUniqueKey(t));
         propertiesComponent.unsetValue(key);
         keys.remove(key);

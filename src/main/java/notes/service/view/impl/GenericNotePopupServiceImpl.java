@@ -19,7 +19,7 @@ import notes.service.view.GenericNotePopupService;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public abstract class GenericNotePopupServiceImpl<T extends Note> implements GenericNotePopupService<T> {
 
@@ -37,7 +37,7 @@ public abstract class GenericNotePopupServiceImpl<T extends Note> implements Gen
 
     private void putNote(T note){
         getService().putNote(note);
-    };
+    }
 
     @Override
     public void create(AnActionEvent e, T note) {
@@ -68,11 +68,11 @@ public abstract class GenericNotePopupServiceImpl<T extends Note> implements Gen
     }
 
     private class PopupContent {
-        JPanel mainPanel;
-        JTextArea noteText;
-        JButton closeButton;
-        JButton editButton;
-        JButton deleteButton;
+        final JPanel mainPanel;
+        final JTextArea noteText;
+        final JButton closeButton;
+        final JButton editButton;
+        final JButton deleteButton;
         Boolean editted = false;
 
         PopupContent(JPanel _mainPanel, JTextArea _noteText, JButton _closeButton, JButton _editButton, JButton _deleteButton) {
@@ -119,10 +119,6 @@ public abstract class GenericNotePopupServiceImpl<T extends Note> implements Gen
         return new PopupContent(mainPanel, noteTextArea, closeButton, editButton, deleteButton);
     }
 
-    private interface PopupActions {
-        void close(ActionEvent event);
-    }
-
     private void registerListeners(PopupContent popupContent, JBPopup jbPopup, T note) {
 
         popupContent.noteText.getDocument().addDocumentListener(new DocumentListener() {
@@ -141,20 +137,14 @@ public abstract class GenericNotePopupServiceImpl<T extends Note> implements Gen
             }
         });
 
-        PopupActions popupActions = new PopupActions() {
-            @Override
-            public void close(ActionEvent event) {
-                jbPopup.closeOk(null);
-            }
-        };
-
-        popupContent.closeButton.addActionListener(popupActions::close);
+        ActionListener closePopup = actionEvent->jbPopup.closeOk(null);
+        popupContent.closeButton.addActionListener(closePopup);
 
         popupContent.editButton.addActionListener(e -> popupContent.noteText.setEnabled(!popupContent.noteText.isEnabled()));
 
         popupContent.deleteButton.addActionListener(e -> {
             deleteNote(note);
-            popupActions.close(e);
+            closePopup.actionPerformed(e);
         });
 
         jbPopup.addListener(new JBPopupListener.Adapter() {

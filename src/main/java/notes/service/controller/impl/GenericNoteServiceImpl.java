@@ -17,8 +17,8 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
 
     abstract String getPath(String Key);
 
-    private ArrayList<U> storageServices;
-    private WeakHashMap<String, U> storageServiceCache = new WeakHashMap<>();
+    private final ArrayList<U> storageServices = new ArrayList<>();
+    private final WeakHashMap<String, U> storageServiceCache = new WeakHashMap<>();
 
     @Override
     public void setProjectAndModules(Project project, Module[] modules){
@@ -27,7 +27,6 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
         System.out.println(project);
 
         System.out.println("setProjectAndModules modules");
-        storageServices = null;
         setupStorageServices(modules);
     }
 
@@ -59,7 +58,7 @@ public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNo
 
     private void setupStorageServices(Module[] modules) {
 
-        storageServices = new ArrayList<>(modules.length);
+        storageServices.clear();
 
         Arrays.stream(modules).forEach(m-> {
                 System.out.println(m.getModuleFilePath());

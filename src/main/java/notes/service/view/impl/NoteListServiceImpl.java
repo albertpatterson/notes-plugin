@@ -21,18 +21,17 @@ import notes.service.view.NoteListService;
 import notes.service.view.NotePopupService;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class NoteListServiceImpl implements NoteListService {
 
-    private LineNoteService lineNoteService = ServiceManager.getService(LineNoteService.class);
-    private NoteService noteService = ServiceManager.getService(NoteService.class);
-    private NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
+    private final LineNoteService lineNoteService = ServiceManager.getService(LineNoteService.class);
+    private final NoteService noteService = ServiceManager.getService(NoteService.class);
+    private final NotePopupService notePopupService = ServiceManager.getService(NotePopupService.class);
     private JBPopup jbPopup;
 
     @Override
@@ -58,33 +57,25 @@ public class NoteListServiceImpl implements NoteListService {
         jbPopup.showCenteredInCurrentWindow(e.getProject());
     }
 
-
-    private interface ListItem {
-        String createText(Note note);
-    }
-
-    private JPanel createNoteListPanel(AnActionEvent event, Note[] notes, ListItem listItem) {
+    private JPanel createNoteListPanel(AnActionEvent event, Note[] notes, Function<Note, String> createPreview) {
         final JPanel jPanel = new JPanel();
 
-        final String[] previews = Arrays.stream(notes).map(listItem::createText).toArray(String[]::new);
+        final String[] previews = Arrays.stream(notes).map(createPreview).toArray(String[]::new);
 
         final JBList<String> jbList = new JBList<>(previews);
 
-        jbList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent selectionEvent) {
-                final int idx = selectionEvent.getFirstIndex();
-                final Note note = notes[idx];
-                final String filepath = note.filepath;
-                final File file = new File(filepath);
-                final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
-                final Project project = event.getProject();
-                if(project!=null && virtualFile!=null){
-                    new OpenFileDescriptor(event.getProject(), virtualFile).navigate(true);
-                    notePopupService.create(event, note);
-                }
-                jbPopup.closeOk(null);
+        jbList.addListSelectionListener((selectionEvent)->{
+            final int idx = selectionEvent.getFirstIndex();
+            final Note note = notes[idx];
+            final String filepath = note.filepath;
+            final File file = new File(filepath);
+            final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(file);
+            final Project project = event.getProject();
+            if(project!=null && virtualFile!=null){
+                new OpenFileDescriptor(event.getProject(), virtualFile).navigate(true);
+                notePopupService.create(event, note);
             }
+            jbPopup.closeOk(null);
         });
 
         jbList.addMouseMotionListener(new MouseMotionListener(){

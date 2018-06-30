@@ -27,19 +27,20 @@ import java.util.List;
 
 public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
 
-    private LineNoteService noteService = ServiceManager.getService(LineNoteService.class);
-    private LineNotePopupService lineNotePopupService = ServiceManager.getService(LineNotePopupService.class);
+    private final LineNoteService noteService = ServiceManager.getService(LineNoteService.class);
+    private final LineNotePopupService lineNotePopupService = ServiceManager.getService(LineNotePopupService.class);
 
     public void create(AnActionEvent e){
 
         Project project = e.getProject();
         Editor editor = e.getData(CommonDataKeys.EDITOR);
-        if(project==null || editor==null) return;
+        String path = getFilePath(e);
+
+        if(project==null || editor==null || path==null) return;
 
         Module[] modules = ModuleManager.getInstance(project).getModules();
         noteService.setProjectAndModules(project, modules);
 
-        String path = getFilePath(e);
 
         EditorGutter gutter = editor.getGutter();
         TextAnnotationGutterProvider textAnnotationGutterProvider = new TextAnnotationGutterProvider(){
@@ -64,7 +65,7 @@ public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
 
             @Override
             public ColorKey getColor(int line, Editor editor) {
-                return ColorKey.createColorKey("black", Color.black);
+                return ColorKey.createColorKey("black", JBColor.BLACK);
             }
 
             @Nullable
@@ -104,6 +105,6 @@ public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
 
     private static String getFilePath(AnActionEvent e) {
         final VirtualFile vf = e.getData(CommonDataKeys.VIRTUAL_FILE);
-        return vf.getPath();
+        return (vf==null)?null:vf.getPath();
     }
 }

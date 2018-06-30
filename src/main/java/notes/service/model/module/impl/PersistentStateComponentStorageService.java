@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public abstract class PersistentStateComponentStorageService<T> implements PersistentStateComponent<StoredItem> {
+abstract class PersistentStateComponentStorageService<T> implements PersistentStateComponent<StoredItem> {
 
     private StoredItem storedItem;
 
@@ -20,8 +20,8 @@ public abstract class PersistentStateComponentStorageService<T> implements Persi
 
     abstract T decode(String encoding);
 
-    private String moduleDataKey;
-    private String modulePath;
+    private final String moduleDataKey;
+    private final String modulePath;
 
     PersistentStateComponentStorageService(Module module, String dataId) {
         modulePath = getParentDirectory(module);
@@ -91,9 +91,9 @@ class StoredItem{
 
     public Map<String, String> getValues(){
         return values;
-    };
+    }
 
     public void setValues(Map<String, String> newValues){
         values = newValues;
-    };
+    }
 }
