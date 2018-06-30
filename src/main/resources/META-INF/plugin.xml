@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>org.jetbrains</id>
+    <id>com.albert-patterson.notes-plugin</id>
     <name>Notes-Plugin</name>
-    <vendor email="null" url="github">Notes Plugin Project</vendor>
+    <vendor email="null" url="https://github.com/albertpatterson/notes-plugin">Notes Plugin Project</vendor>
 
     <description><![CDATA[
     A plugin for recording and managing notes about files
