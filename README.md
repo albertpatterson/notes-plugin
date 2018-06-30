@@ -23,11 +23,13 @@ Install via one of the following:
 
 * Show annotations for notes about lines in a file via context menu:
 ![Show annotations for notes about lines in a file via context menu](readme/showNoteAnnotations.png "Show annotations for notes about lines in a file via context menu")
+* Annotations for notes about lines in a file:
+![annotations for notes about lines in a file](readme/noteAnnotations.png "annotations for notes about lines in a file]")
     * Annotations will appear as ">>" if there is note about the line or "+" if there is no note. 
     * Click the annotation to add/edit a note about a line.
     * A preview of the note will be shown in the tooltip when hovering over an annotation
-* Edit a note about a file:
-![Edit a note about a file](readme/lineNoteWindow.png "Edit a note about a file")
+* Edit a note about a line in the file:
+![Edit a note about a line in the file](readme/lineNoteWindow.png "Edit a note about a line in the file")
 * Annotations automatically updated:
 ![Annotations automatically updated](readme/updatedNoteAnnotations.png "Annotations automatically updated")
 
