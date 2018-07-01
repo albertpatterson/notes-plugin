@@ -45,4 +45,4 @@ Install via one of the following:
 TODO: write tests
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/albertpatterson/notes-plugin/blob/master/LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/albertpatterson/notes-plugin/blob/master/LICENSE) file for details
