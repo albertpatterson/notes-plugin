@@ -2,7 +2,7 @@
 An Intellij plugin for recording and managing file related notes
 
 ## Prerequisites
-A copy of Intellij Idea: [download](https://www.jetbrains.com/idea/download/#section=mac) 
+Install Intellij Idea: [download](https://www.jetbrains.com/idea/download/#section=mac) 
 
 ## Installation 
 Install via one of the following:
