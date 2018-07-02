@@ -1,5 +1,5 @@
 # notes-plugin
-An Intellij plugin for recording and managing file related notes
+An Intellij plugin for recording and managing notes about files and lines in files, without altering the contents of the files. Context menu options and gutter annotations are provided to add and view notes, and popups are provided for editing, saving and deleting as well as viewing a list of all notes in a project.
 
 ## Prerequisites
 Install Intellij Idea: [download](https://www.jetbrains.com/idea/download/#section=mac) 
