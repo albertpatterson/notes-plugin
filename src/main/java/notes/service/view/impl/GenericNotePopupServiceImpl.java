@@ -40,13 +40,13 @@ public abstract class GenericNotePopupServiceImpl<T extends Note> implements Gen
     }
 
     @Override
-    public void create(AnActionEvent e, T note) {
-        Project project = e.getProject();
+    public void create(AnActionEvent anActionEvent, T note) {
+        Project project = anActionEvent.getProject();
         if (project == null) return;
         Module[] modules = ModuleManager.getInstance(project).getModules();
         setProjectAndModules(project, modules);
 
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+        Editor editor = anActionEvent.getData(CommonDataKeys.EDITOR);
 
         final JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
         PopupContent popupContent = createContent(note);

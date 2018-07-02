@@ -9,8 +9,8 @@ import notes.service.model.module.LineNoteStorageService;
 public class LineNoteServiceImpl extends GenericNoteServiceImpl<LineNote, LineNoteStorageService> implements LineNoteService {
 
     @Override
-    LineNoteStorageService getStorageService(Module m) {
-        return ModuleServiceManager.getService(m, LineNoteStorageService.class);
+    LineNoteStorageService getStorageService(Module module) {
+        return ModuleServiceManager.getService(module, LineNoteStorageService.class);
     }
 
     @Override

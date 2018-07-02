@@ -13,9 +13,19 @@ import java.util.stream.Stream;
 
 public abstract class GenericNoteServiceImpl<T extends Note, U extends GenericNoteStorageService<T>> implements GenericNoteService<T>{
 
-    abstract U getStorageService(Module m);
+    /**
+     * Get the storage service for a particular module
+     * @param module the module to which the corresponding file belongs
+     * @return the service that stores and retrieves the note data
+     */
+    abstract U getStorageService(Module module);
 
-    abstract String getPath(String Key);
+    /**
+     * Get the path to the file corresponding to a note, based on the key used to store the note
+     * @param key the key that can be used to look up the note from the storage serviceB
+     * @return the path to the file corresponding to a note
+     */
+    abstract String getPath(String key);
 
     private final ArrayList<U> storageServices = new ArrayList<>();
     private final WeakHashMap<String, U> storageServiceCache = new WeakHashMap<>();

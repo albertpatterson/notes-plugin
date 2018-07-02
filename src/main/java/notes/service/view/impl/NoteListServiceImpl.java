@@ -35,15 +35,15 @@ public class NoteListServiceImpl implements NoteListService {
     private JBPopup jbPopup;
 
     @Override
-    public void create(AnActionEvent e) {
+    public void create(AnActionEvent anActionEvent) {
 
-        Project project = e.getProject();
+        Project project = anActionEvent.getProject();
         if(project==null) return;
         Module[] modules = ModuleManager.getInstance(project).getModules();
         lineNoteService.setProjectAndModules(project, modules);
         noteService.setProjectAndModules(project, modules);
 
-        final JComponent popupContent = createContents(e);
+        final JComponent popupContent = createContents(anActionEvent);
 
         final JBPopupFactory jbPopupFactory = JBPopupFactory.getInstance();
         jbPopup = jbPopupFactory.createComponentPopupBuilder(popupContent, popupContent)
@@ -54,7 +54,7 @@ public class NoteListServiceImpl implements NoteListService {
                 .setRequestFocus(true)
                 .createPopup();
 
-        jbPopup.showCenteredInCurrentWindow(e.getProject());
+        jbPopup.showCenteredInCurrentWindow(anActionEvent.getProject());
     }
 
     private JPanel createNoteListPanel(AnActionEvent event, Note[] notes, Function<Note, String> createPreview) {

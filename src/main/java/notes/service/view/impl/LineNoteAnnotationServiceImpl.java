@@ -30,11 +30,11 @@ public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
     private final LineNoteService noteService = ServiceManager.getService(LineNoteService.class);
     private final LineNotePopupService lineNotePopupService = ServiceManager.getService(LineNotePopupService.class);
 
-    public void create(AnActionEvent e){
+    public void create(AnActionEvent anActionEvent){
 
-        Project project = e.getProject();
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
-        String path = getFilePath(e);
+        Project project = anActionEvent.getProject();
+        Editor editor = anActionEvent.getData(CommonDataKeys.EDITOR);
+        String path = getFilePath(anActionEvent);
 
         if(project==null || editor==null || path==null) return;
 
@@ -91,7 +91,7 @@ public class LineNoteAnnotationServiceImpl implements NoteAnnotationService {
                 editor.getCaretModel().moveToOffset(editor.getDocument().getLineStartOffset(lineNum));
                 LineNote lineNote = noteService.getNote(LineNoteService.makeKey(path, lineNum));
                 if(lineNote==null) lineNote = new LineNote(path, lineNum, "");
-                lineNotePopupService.create(e, lineNote);
+                lineNotePopupService.create(anActionEvent, lineNote);
             }
 
             @Override

@@ -6,13 +6,11 @@ import notes.service.controller.NoteService;
 import notes.service.model.Note;
 import notes.service.model.module.NoteStorageService;
 
-
 public class NoteServiceImpl extends GenericNoteServiceImpl<Note, NoteStorageService> implements NoteService {
 
-
     @Override
-    NoteStorageService getStorageService(Module m) {
-        return ModuleServiceManager.getService(m, NoteStorageService.class);
+    NoteStorageService getStorageService(Module module) {
+        return ModuleServiceManager.getService(module, NoteStorageService.class);
     }
 
     @Override
