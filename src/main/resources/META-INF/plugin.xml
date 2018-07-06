@@ -1,10 +1,10 @@
 <idea-plugin>
     <id>com.albert-patterson.notes-plugin</id>
     <name>Notes-Plugin</name>
-    <vendor email="null" url="https://github.com/albertpatterson/notes-plugin">Notes Plugin Project</vendor>
+    <vendor email="apatterson@alumni.cmu.edu" url="https://github.com/albertpatterson/notes-plugin">Notes Plugin Project</vendor>
 
     <description><![CDATA[
-    A plugin for recording and managing notes about files
+    A plugin for recording and managing notes about files and lines in files, without altering the contents of the files. Context menu options and gutter annotations are provided to add and view notes, and popups are provided for editing, saving and deleting as well as viewing a list of all notes in a project
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
